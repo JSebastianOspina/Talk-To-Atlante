@@ -10,7 +10,7 @@ class TalkToAtlante
      * @param array $data The data to be encoded and sent to the client.
      * @param array $errors The current error from the response.
      */
-    public function __construct(array $data = [], array $errors = [])
+    public function __construct(array $data = array(), array $errors = array())
     {
         $this->errors = $errors;
         $this->data = $data;
@@ -19,14 +19,14 @@ class TalkToAtlante
     final public function setError(ResponseCodes $errorType = null, $message = 'An error ocurred, no details where specified', $statusCode = 400)
     {
         if ($errorType !== null) {
-            $this->errors[] = [
+            $this->errors[] = array(
                 'message' => $errorType->getMessage(),
-            ];
+            );
             $this->setResponseStatusCode($errorType->getStatusCode());
         } else {
-            $this->errors[] = [
+            $this->errors[] = array(
                 'message' => $message,
-            ];
+            );
             $this->setResponseStatusCode($statusCode);
         }
 
@@ -40,13 +40,13 @@ class TalkToAtlante
         header('X-PHP-Response-Code: ' . $statusCode, true, $statusCode);
     }
 
-    final public function sendResponse(array $data = [], $statusCode = 200)
+    final public function sendResponse(array $data = array(), $statusCode = 200)
     {
         $this->enableCors();
         $this->setJsonResponseHeaders();
 
         if (count($this->errors) > 0) {
-            echo json_encode(['errors' => $this->errors]);
+            echo json_encode(array('errors' => $this->errors));
             die();
         }
         $this->setData($data);
